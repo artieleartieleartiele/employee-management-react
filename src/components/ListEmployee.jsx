@@ -3,14 +3,16 @@ import {DataGrid, RowSelectedParams} from '@material-ui/data-grid';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
-import {ButtonGroup, IconButton} from "@material-ui/core";
+import {Alert, ButtonGroup, IconButton, Snackbar} from "@material-ui/core";
 import {Component} from "react";
 import EmployeeService from "../services/EmployeeService";
+import AddEmployee from "./AddEmployee";
 
 class ListEmployee extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      open: false,
       selectedRows: [],
       employees: [],
       rows: [],
@@ -50,6 +52,17 @@ class ListEmployee extends Component {
         });
   }
 
+  handleClose() {
+    this.setState({open: false})
+  }
+
+  handleOpen() {
+    // TODO: use snackbar below to notify user that changes were saved
+    // TODO: mve the sending of form (EmployeeService.addEmployee(employee)
+    //  to ListEmployee from AddEmployee. AddEmployee should pass its data up to parent ListEmployee component
+    this.setState({open: true})
+  }
+
   render() {
     return (
         <div style={{height: 400, width: '100%'}}>
@@ -69,6 +82,13 @@ class ListEmployee extends Component {
               checkboxSelection columnBuffer={2}
               onSelectionChange={e => this.setState({selectedRows: e})}
           />
+          <AddEmployee/>
+
+          <Snackbar open={this.state.open} autoHideDuration={3000} onClose={() => this.handleClose()}>
+            <Alert onClose={() => this.handleClose()} severity="success">
+              Changes saved.
+            </Alert>
+          </Snackbar>
         </div>
     );
   }
